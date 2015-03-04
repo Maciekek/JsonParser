@@ -1,10 +1,14 @@
 package service;
 
+import domain.Person;
+
 /**
  * Created by Maciek on 2015-03-04.
  */
 public class PersonManager {
-    public int test(){
-        return 0;
+    public Person createPerson (String name,String lastName,int age){
+        Person person = new Person(name, lastName,age);
+        return person;
     }
+
 }
