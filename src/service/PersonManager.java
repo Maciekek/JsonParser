@@ -1,6 +1,8 @@
 package service;
 
+import JsonParser.JsonParser;
 import domain.Person;
+
 
 /**
  * Created by Maciek on 2015-03-04.
@@ -10,5 +12,7 @@ public class PersonManager {
         Person person = new Person(name, lastName,age);
         return person;
     }
+
+
 
 }
