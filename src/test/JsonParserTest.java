@@ -1,11 +1,14 @@
 package test;
 
 import JsonParser.JsonParser;
+import domain.Car;
+import domain.Dog;
 import domain.Person;
 import org.junit.Test;
 
 import com.google.gson.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,7 @@ import static org.junit.Assert.*;
 
 public class JsonParserTest {
     @Test
-    public void getJsonTest() throws IllegalAccessException {
+    public void getJsonTest(){
         List logins = new ArrayList();
         logins.add("Teest");
         logins.add("Test2");
@@ -25,6 +28,18 @@ public class JsonParserTest {
 
         String jsonCreated = JsonParser.getJson(person);
         assertEquals(jsonExpected,jsonCreated);
+    }
+
+    @Test
+    public void getJsonTestWithCar(){
+        Car car = new Car("BMW", "m3", 2009);
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        String jsonExpected = gson.toJson(car);
+
+        String jsonCreated = JsonParser.getJson(car);
+        assertEquals(jsonExpected, jsonCreated);
     }
 
     @Test
@@ -78,16 +93,70 @@ public class JsonParserTest {
         String jsonActual = JsonParser.addCollectionToJson(list);
         assertEquals(jsonExpected, jsonActual);
     }
-//    @Test
-//    public void lastElementTest(){
-//        Field elements;
-//        Boolean lastElement = JsonParser.lastElement(elements, 1);
-//
-//        assertTrue(lastElement);
-//
-//
-//
-//    }
+
+    @Test
+    public void jsonToObjectTest() throws NoSuchMethodException, IllegalAccessException, InstantiationException, NoSuchFieldException, InvocationTargetException, ClassNotFoundException {
+        String mark = "BMW";
+        String model = "m3";
+        int yop = 2009;
+        String json = "{\"ClassName\":\"domain.Car\",\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
+
+
+        Car carExpected = new Car(mark,model,yop);
+
+        Car carCreated =(Car) JsonParser.jsonToObject(json);
+
+        assertEquals(carExpected.getMark(),carCreated.getMark());
+        assertEquals(carExpected.getModel(),carCreated.getModel());
+        assertEquals(carExpected.getYop(),carCreated.getYop());
+    }
+
+    @Test
+    public void jsonToObjectTestWithDog() throws NoSuchMethodException, IllegalAccessException, InstantiationException, NoSuchFieldException, InvocationTargetException, ClassNotFoundException {
+        String name = "test";
+        int age = 12;
+        String json = "{\"ClassName\":\"domain.Dog\",\"name\":\""+name+"\",\"age\":"+age+"}";
+
+        Dog dogExpected = new Dog(name, age);
+        Dog dogCreated = (Dog) JsonParser.jsonToObject(json);
+
+        assertEquals(dogExpected.getName(), dogCreated.getName());
+        assertEquals(dogExpected.getAge(), dogCreated.getAge());
+    }
+
+    @Test
+    public void prepareJsonTest(){
+        String className = "domain.Car";
+        String mark = "BMW";
+        String model = "m3";
+        int yop = 2009;
+        String json = "{\"ClassName\":"+className+",\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
+
+        List<String> jsonFormatExpected = new ArrayList<String>();
+        jsonFormatExpected.add("ClassName:"+className);
+        jsonFormatExpected.add("mark:"+mark);
+        jsonFormatExpected.add("model:"+model);
+        jsonFormatExpected.add("yop:"+yop);
+
+        List<String> jsonFormatCreated = JsonParser.prepareJson(json);
+
+        assertEquals(jsonFormatExpected,jsonFormatCreated);
+    }
+
+    @Test
+    public void getClassNameFromJsonTest(){
+        String className = "domain.Car";
+        String mark = "BMW";
+        String model = "m3";
+        int yop = 2009;
+        String json = "{\"ClassName\":\""+className+"\",\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
+
+        String classNameExpected = className;
+
+        String classNameReceived = JsonParser.getClassNameFromJson(json);
+
+        assertEquals(classNameExpected, classNameReceived);
+    }
 
 
 
