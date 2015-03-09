@@ -1,6 +1,7 @@
 package JsonParser;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -45,7 +46,7 @@ public class JsonParser {
     }
 
     public static Object jsonToObject(String json) throws IllegalAccessException {
-        List<String> jsonAttributes = prepareJson(json);
+        //List<String> jsonAttributes = prepareJson(json);
 
         Class c = null;
         try {
@@ -65,27 +66,53 @@ public class JsonParser {
         Field[] fields = c.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             fields[i].setAccessible(true);
-            String name = getValueFromFieldName(fields[i].getName(), jsonAttributes);
-            System.out.println(name);
-            Type typeOfData = checkTypeOfName(name);
+            Field fieldName = fields[i];
+            String jsonActualValue = getJsonToThisField(fieldName.getName(), json);
+
+            Type typeOfData = checkTypeOfName(fieldName);
+
+            if (typeOfData == Type.LIST) {
+                List<String> preparedValue = prepareListToAdd(jsonActualValue);
+                    fieldName.set(object, preparedValue);
+            }
             if (typeOfData == Type.ANY) {
+                String preparedValue = getValueFromFieldName(fieldName,jsonActualValue);
                 try {
-                    fields[i].set(object, name);
+                    fields[i].set(object, preparedValue);
                 } catch (IllegalArgumentException e) {
-                    fields[i].setInt(object, Integer.parseInt(name));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    fields[i].setInt(object, Integer.parseInt(preparedValue));
                 }
             }
-            if(typeOfData ==Type.BOOL){
-                fields[i].setBoolean(object,Boolean.parseBoolean(name));
-            }
-            if(typeOfData ==Type.LIST){
-                //fields[i].setBoolean(object,Boolean.parseBoolean(name));
-                System.out.println("dodaje liste!");
+            if(typeOfData == Type.BOOL){
+                String preparedValue = getValueFromFieldName(fieldName,jsonActualValue);
             }
         }
         return (Object) object;
+    }
+
+    public static String getValueFromFieldName(Field fieldName, String json) {
+        Pattern p = Pattern.compile(".*:\"?\\s*(\\w*)");
+
+        Matcher m = p.matcher(json);
+            if (m.find()) {
+            return m.group(1);
+        }
+        return null;
+    }
+
+    public static List<String> prepareListToAdd(String jsonActualValue) {
+        List<String> preparedValues = new ArrayList<String>();
+        System.out.println(jsonActualValue);
+        List<String> jsonAttributes = Arrays.asList(jsonActualValue.split(","));
+        for (String json : jsonAttributes) {
+            Pattern p = Pattern.compile("\"logins\":\"(.*?)\"");
+            Matcher m = p.matcher(json);
+            System.out.println("JSON " + json);
+            if (m.find()) {
+                    preparedValues.add(m.group(1));
+            }
+        }
+        return preparedValues;
     }
 
     public static String getClassNameFromJson(String json) {
@@ -94,18 +121,21 @@ public class JsonParser {
         if (m.find()) {
             return m.group(1);
         }
-
         return null;
     }
 
-    private static String getValueFromFieldName(String name, List<String> jsons) {
-        Pattern p = Pattern.compile(".*:\\s*(.*)");
-        for (String json : jsons) {
-            if (json.contains(name)) {
-                Matcher m = p.matcher(json);
-                if (m.find()) {
-                    return m.group(1);
-                }
+    private static String getJsonToThisField(String name, String json) {
+        Pattern p = Pattern.compile("\"" + name + "\":\"?.*?\"");
+        Pattern p2 = Pattern.compile("\"" + name + "\":\\[\\{.*}?\"?\\w\"}");
+
+        Matcher m2 = p2.matcher(json);
+        System.out.println(p2);
+        if (m2.find()) {
+            return m2.group(0);
+        } else {
+            Matcher m = p.matcher(json);
+            if (m.find()) {
+                return m.group(0);
             }
         }
         return null;
@@ -120,7 +150,10 @@ public class JsonParser {
         List<String> jsonAttributes;
 
         jsonAttributes = Arrays.asList(json.split(","));
-
+//        System.out.println("---------------");
+        for (String json2 : jsonAttributes) {
+//            System.out.println(json2);
+        }
         return jsonAttributes;
     }
 
@@ -144,7 +177,6 @@ public class JsonParser {
     }
 
     public static JsonParser.Type checkTypeOfField(Object element) {
-
         if (element instanceof Boolean) {
             return Type.BOOL;
         }
@@ -156,17 +188,16 @@ public class JsonParser {
         }
         return Type.ANY;
     }
-    public static JsonParser.Type checkTypeOfName(String name) {
-        if (name.equals("true") || name.equals("false")) {
+
+    public static JsonParser.Type checkTypeOfName(Field name) {
+        if (name.getType().toString().contains("java.util.List")) {
+            return Type.LIST;
+        } else if(name.getType().toString().contains("java.lang.Boolean") || name.getType().toString().contains("boolean")){
             return Type.BOOL;
         }
-//        if (element instanceof Number) {
-//            return Type.NUMBER;
-//        }
-//        if (element instanceof List) {
-//            return Type.LIST;
-//        }
-        return Type.ANY;
+        else {
+            return Type.ANY;
+        }
     }
 
     public static boolean lastElement(Field fields[], int i) {

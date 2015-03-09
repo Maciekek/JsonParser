@@ -7,6 +7,8 @@ import domain.Person;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -33,15 +35,21 @@ public class Main {
 
 
         String json = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
-                "\"ifAgree\":true,\"logins\":[{\"logins\":"+ "\"testowy1\"" + "},{\"logins\":\"testowy2\"}]}";
-        System.out.println(json);
-        Car carCreated = (Car) JsonParser.jsonToObject(json);
-//
-//        System.out.println("------------------");
-//        System.out.println("car model: " + carCreated.getModel());
-//        System.out.println("car mark: " + carCreated.getMark());
-//        System.out.println("car mark: " + carCreated.getYop());
+                "\"ifAgree\":\"true\",\"logins\":[{\"logins\":"+ "\"testowy1\"" + "},{\"logins\":\"testowy2\"}]}";
 
+//        String json = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
+//                "\"ifAgree\":\"true\",\"logins\":[{\"logins\":21},{\"logins\":22}]}";
+
+
+        Person pCreated = (Person) JsonParser.jsonToObject(json);
+        System.out.println(json);
+        System.out.println("MAIN-----");
+        System.out.println(pCreated.getLogins().toString());
+        System.out.println(pCreated.getLogins().get(0));
+        System.out.println(pCreated.getLogins().get(1));
+        System.out.println(pCreated.getName());
+        System.out.println(pCreated.getAge());
+        System.out.println(pCreated.getLastName());
 
 
     }
