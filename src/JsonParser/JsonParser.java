@@ -22,8 +22,7 @@ public class JsonParser {
             try {
                 elementValue = fields[i].get(ob);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                return "error";
+                return "Error 1. ";
             }
             Type typeOfData = checkTypeOfField(elementValue);
 
@@ -46,69 +45,67 @@ public class JsonParser {
     }
 
     public static Object jsonToObject(String json) throws IllegalAccessException {
-        //List<String> jsonAttributes = prepareJson(json);
-
         Class c = null;
+        Object newObject = null;
         try {
             c = Class.forName(getClassNameFromJson(json));
+            newObject = c.newInstance();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
-        Object object = null;
-        try {
-            object = c.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
 
-        Field[] fields = c.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            fields[i].setAccessible(true);
-            Field fieldName = fields[i];
-            String jsonActualValue = getJsonToThisField(fieldName.getName(), json);
+        Field[] classFields = c.getDeclaredFields();
+        for (int i = 0; i < classFields.length; i++) {
+            Field fieldName = classFields[i];
+            fieldName.setAccessible(true);
 
+            String jsonActualValue = getJsonToThisField(fieldName.getName(), json);
             Type typeOfData = checkTypeOfName(fieldName);
 
             if (typeOfData == Type.LIST) {
-                List<String> preparedValue = prepareListToAdd(jsonActualValue);
-                fieldName.set(object, preparedValue);
+                List preparedValue = prepareListToAdd(jsonActualValue);
+                fieldName.set(newObject, preparedValue);
             }
+
             if (typeOfData == Type.ANY) {
-                String preparedValue = getValueFromFieldName(fieldName, jsonActualValue);
+                String preparedValue = getValueFromFieldName(jsonActualValue);
                 try {
-                    fields[i].set(object, preparedValue);
+                    fieldName.set(newObject, preparedValue);
                 } catch (IllegalArgumentException e) {
-                    fields[i].setInt(object, Integer.parseInt(preparedValue));
+                    fieldName.setInt(newObject, Integer.parseInt(preparedValue));
                 }
             }
+
             if (typeOfData == Type.BOOL) {
-                String preparedValue = getValueFromFieldName(fieldName, jsonActualValue);
+                String preparedValue = getValueFromFieldName(jsonActualValue);
+                fieldName.setBoolean(newObject, Boolean.valueOf(preparedValue));
             }
         }
-        return (Object) object;
+        return newObject;
     }
 
-    public static String getValueFromFieldName(Field fieldName, String json) {
+    public static String getValueFromFieldName(String json) {
         Pattern p = Pattern.compile(".*:\"?\\s*(\\w*)");
-        System.out.println(json);
-        Matcher m = p.matcher(json);
+        Matcher m;
+        try {
+            m = p.matcher(json);
+        } catch (NullPointerException e) {
+            return "null";
+        }
         if (m.find()) {
-            System.out.println("ASASD: " + m.group(1));
             return m.group(1);
         }
-        return null;
+        return "null";
     }
 
-    public static List<String> prepareListToAdd(String jsonActualValue) {
+    public static List prepareListToAdd(String jsonActualValue) {
         List<String> preparedValues = new ArrayList<String>();
-        System.out.println(jsonActualValue);
         List<String> jsonAttributes = Arrays.asList(jsonActualValue.split(","));
         for (String json : jsonAttributes) {
-            Pattern p = Pattern.compile("\"logins\":\"(.*?)\"");
+            Pattern p = Pattern.compile("\\{\"logins\":\"?(.*?)\"?\\W");
             Matcher m = p.matcher(json);
-            System.out.println("JSON " + json);
             if (m.find()) {
                 preparedValues.add(m.group(1));
             }
@@ -130,8 +127,7 @@ public class JsonParser {
         Pattern p2 = Pattern.compile("\"" + name + "\":\\[\\{.*}?\"?\\w\"?}");
 
         Matcher m2 = p2.matcher(json);
-        System.out.println(json);
-        System.out.println("qwqwe: " +  p);
+
         if (m2.find()) {
             return m2.group(0);
         } else {
@@ -152,10 +148,6 @@ public class JsonParser {
         List<String> jsonAttributes;
 
         jsonAttributes = Arrays.asList(json.split(","));
-//        System.out.println("---------------");
-        for (String json2 : jsonAttributes) {
-//            System.out.println(json2);
-        }
         return jsonAttributes;
     }
 

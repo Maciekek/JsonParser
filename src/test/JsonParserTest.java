@@ -125,6 +125,74 @@ public class JsonParserTest {
     }
 
     @Test
+    public void jsonToObjectTestWithListWithStrings() throws IllegalAccessException {
+        String name="macek";
+        String lastName = "nazwisko";
+        int age = 2109;
+        boolean ifAgree = true;
+        List logins = new ArrayList();
+        logins.add("testowy1");
+        logins.add("testowy2");
+        String jsonToCreateObject = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
+                "\"ifAgree\":\"true\",\"logins\":[{\"logins\":"+ "\"testowy1\"" + "},{\"logins\":\"testowy2\"}]}";
+
+        Person personExpected = new Person(name, lastName,age,ifAgree,logins);
+        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject);
+
+        assertEquals(personExpected.getName(), personCreated.getName());
+        assertEquals(personExpected.getLastName(), personCreated.getLastName());
+        assertEquals(personExpected.getAge(), personCreated.getAge());
+        assertEquals(personExpected.getLogins(), personCreated.getLogins());
+        assertEquals(personExpected.isIfAgree(), personCreated.isIfAgree());
+    }
+
+    @Test
+    public void jsonToObjectTestWithListWithNumbers() throws IllegalAccessException {
+        String name="macek";
+        String lastName = "nazwisko";
+        int age = 2109;
+        boolean ifAgree = true;
+        List logins = new ArrayList();
+        logins.add("1");
+        logins.add("2");
+
+        String jsonToCreateObject = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
+                "\"ifAgree\":true,\"logins\":[{\"logins\":1},{\"logins\":2}]}";
+
+        Person personExpected = new Person(name, lastName,age,ifAgree,logins);
+        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject);
+
+        assertEquals(personExpected.getName(), personCreated.getName());
+        assertEquals(personExpected.getLastName(), personCreated.getLastName());
+        assertEquals(personExpected.getAge(), personCreated.getAge());
+        assertEquals(personExpected.getLogins(), personCreated.getLogins());
+        assertEquals(personExpected.isIfAgree(), personCreated.isIfAgree());
+    }
+
+    @Test
+    public void jsonToObjectTestWithListWithIncompleteJson() throws IllegalAccessException {
+        String name="macek";
+        String lastName = "null";
+        int age = 2109;
+        boolean ifAgree = true;
+        List logins = new ArrayList();
+        logins.add("1");
+        logins.add("2");
+
+        String jsonToCreateObject = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"age\":"+age+"," +
+                "\"ifAgree\":true,\"logins\":[{\"logins\":1},{\"logins\":2}]}";
+
+        Person personExpected = new Person(name, lastName,age,ifAgree,logins);
+        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject);
+
+        assertEquals(personExpected.getName(), personCreated.getName());
+        assertEquals(personExpected.getLastName(), personCreated.getLastName());
+        assertEquals(personExpected.getAge(), personCreated.getAge());
+        assertEquals(personExpected.getLogins(), personCreated.getLogins());
+        assertEquals(personExpected.isIfAgree(), personCreated.isIfAgree());
+    }
+
+    @Test
     public void prepareJsonTest(){
         String className = "domain.Car";
         String mark = "BMW";
