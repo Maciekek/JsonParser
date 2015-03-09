@@ -73,18 +73,18 @@ public class JsonParser {
 
             if (typeOfData == Type.LIST) {
                 List<String> preparedValue = prepareListToAdd(jsonActualValue);
-                    fieldName.set(object, preparedValue);
+                fieldName.set(object, preparedValue);
             }
             if (typeOfData == Type.ANY) {
-                String preparedValue = getValueFromFieldName(fieldName,jsonActualValue);
+                String preparedValue = getValueFromFieldName(fieldName, jsonActualValue);
                 try {
                     fields[i].set(object, preparedValue);
                 } catch (IllegalArgumentException e) {
                     fields[i].setInt(object, Integer.parseInt(preparedValue));
                 }
             }
-            if(typeOfData == Type.BOOL){
-                String preparedValue = getValueFromFieldName(fieldName,jsonActualValue);
+            if (typeOfData == Type.BOOL) {
+                String preparedValue = getValueFromFieldName(fieldName, jsonActualValue);
             }
         }
         return (Object) object;
@@ -92,9 +92,10 @@ public class JsonParser {
 
     public static String getValueFromFieldName(Field fieldName, String json) {
         Pattern p = Pattern.compile(".*:\"?\\s*(\\w*)");
-
+        System.out.println(json);
         Matcher m = p.matcher(json);
-            if (m.find()) {
+        if (m.find()) {
+            System.out.println("ASASD: " + m.group(1));
             return m.group(1);
         }
         return null;
@@ -109,7 +110,7 @@ public class JsonParser {
             Matcher m = p.matcher(json);
             System.out.println("JSON " + json);
             if (m.find()) {
-                    preparedValues.add(m.group(1));
+                preparedValues.add(m.group(1));
             }
         }
         return preparedValues;
@@ -125,11 +126,12 @@ public class JsonParser {
     }
 
     private static String getJsonToThisField(String name, String json) {
-        Pattern p = Pattern.compile("\"" + name + "\":\"?.*?\"");
-        Pattern p2 = Pattern.compile("\"" + name + "\":\\[\\{.*}?\"?\\w\"}");
+        Pattern p = Pattern.compile("\"" + name + "\":\"?(.*?)\"?,?\\W");
+        Pattern p2 = Pattern.compile("\"" + name + "\":\\[\\{.*}?\"?\\w\"?}");
 
         Matcher m2 = p2.matcher(json);
-        System.out.println(p2);
+        System.out.println(json);
+        System.out.println("qwqwe: " +  p);
         if (m2.find()) {
             return m2.group(0);
         } else {
@@ -192,10 +194,9 @@ public class JsonParser {
     public static JsonParser.Type checkTypeOfName(Field name) {
         if (name.getType().toString().contains("java.util.List")) {
             return Type.LIST;
-        } else if(name.getType().toString().contains("java.lang.Boolean") || name.getType().toString().contains("boolean")){
+        } else if (name.getType().toString().contains("java.lang.Boolean") || name.getType().toString().contains("boolean")) {
             return Type.BOOL;
-        }
-        else {
+        } else {
             return Type.ANY;
         }
     }

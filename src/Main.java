@@ -2,6 +2,7 @@ import JsonParser.JsonParser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import domain.Car;
+import domain.Dog;
 import domain.Person;
 
 import java.lang.reflect.InvocationTargetException;
@@ -26,30 +27,36 @@ public class Main {
 //        System.out.println(gson.toJson(person));
 
 
+//
+//        String name="macek";
+//        String lastName = "nazwisko";
+//        int age = 2109;
+//        boolean ifAgree = true;
+//        List logins;
 
-        String name="macek";
-        String lastName = "nazwisko";
-        int age = 21;
-        boolean ifAgree = true;
-        List logins;
-
-
-        String json = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
-                "\"ifAgree\":\"true\",\"logins\":[{\"logins\":"+ "\"testowy1\"" + "},{\"logins\":\"testowy2\"}]}";
 
 //        String json = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
-//                "\"ifAgree\":\"true\",\"logins\":[{\"logins\":21},{\"logins\":22}]}";
-
-
-        Person pCreated = (Person) JsonParser.jsonToObject(json);
-        System.out.println(json);
-        System.out.println("MAIN-----");
-        System.out.println(pCreated.getLogins().toString());
-        System.out.println(pCreated.getLogins().get(0));
-        System.out.println(pCreated.getLogins().get(1));
-        System.out.println(pCreated.getName());
-        System.out.println(pCreated.getAge());
-        System.out.println(pCreated.getLastName());
+//                "\"ifAgree\":\"true\",\"logins\":[{\"logins\":"+ "\"testowy1\"" + "},{\"logins\":\"testowy2\"}]}";
+//
+////        String json = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
+////                "\"ifAgree\":\"true\",\"logins\":[{\"logins\":21},{\"logins\":22}]}";
+//
+//
+//        Person pCreated = (Person) JsonParser.jsonToObject(json);
+//        System.out.println(json);
+//        System.out.println("MAIN-----");
+//        System.out.println(pCreated.getLogins().toString());
+//        System.out.println(pCreated.getLogins().get(0));
+//        System.out.println(pCreated.getLogins().get(1));
+//        System.out.println(pCreated.getName());
+//        System.out.println(pCreated.getAge());
+//        System.out.println(pCreated.getLastName());
+        String name = "test";
+        int age = 12;
+        String json = "{\"ClassName\":\"domain.Dog\",\"name\":\""+name+"\",\"age\":"+age+"}";
+        Dog dogCreated = (Dog) JsonParser.jsonToObject(json);
+        System.out.println("NAME: " +dogCreated.getName());
+        System.out.println("AGE: " + dogCreated.getAge());
 
 
     }
