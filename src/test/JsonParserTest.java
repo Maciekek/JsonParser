@@ -99,12 +99,12 @@ public class JsonParserTest {
         String mark = "BMW";
         String model = "m3";
         int yop = 2009;
-        String json = "{\"ClassName\":\"domain.Car\",\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
+        String json = "{\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
 
 
         Car carExpected = new Car(mark,model,yop);
 
-        Car carCreated =(Car) JsonParser.jsonToObject(json);
+        Car carCreated =(Car) JsonParser.jsonToObject(json, Car.class);
 
         assertEquals(carExpected.getMark(),carCreated.getMark());
         assertEquals(carExpected.getModel(),carCreated.getModel());
@@ -115,10 +115,10 @@ public class JsonParserTest {
     public void jsonToObjectTestWithDog() throws NoSuchMethodException, IllegalAccessException, InstantiationException, NoSuchFieldException, InvocationTargetException, ClassNotFoundException {
         String name = "test";
         int age = 12;
-        String json = "{\"ClassName\":\"domain.Dog\",\"name\":\""+name+"\",\"age\":"+age+"}";
+        String json = "{\"name\":\""+name+"\",\"age\":"+age+"}";
 
         Dog dogExpected = new Dog(name, age);
-        Dog dogCreated = (Dog) JsonParser.jsonToObject(json);
+        Dog dogCreated = (Dog) JsonParser.jsonToObject(json,Dog.class);
 
         assertEquals(dogExpected.getName(), dogCreated.getName());
         assertEquals(dogExpected.getAge(), dogCreated.getAge());
@@ -133,11 +133,11 @@ public class JsonParserTest {
         List logins = new ArrayList();
         logins.add("testowy1");
         logins.add("testowy2");
-        String jsonToCreateObject = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
+        String jsonToCreateObject = "{\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
                 "\"ifAgree\":\"true\",\"logins\":[{\"logins\":"+ "\"testowy1\"" + "},{\"logins\":\"testowy2\"}]}";
 
         Person personExpected = new Person(name, lastName,age,ifAgree,logins);
-        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject);
+        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject, Person.class);
 
         assertEquals(personExpected.getName(), personCreated.getName());
         assertEquals(personExpected.getLastName(), personCreated.getLastName());
@@ -156,11 +156,11 @@ public class JsonParserTest {
         logins.add("1");
         logins.add("2");
 
-        String jsonToCreateObject = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
+        String jsonToCreateObject = "{\"name\":\""+name+"\",\"lastName\":\""+lastName+"\",\"age\":"+age+"," +
                 "\"ifAgree\":true,\"logins\":[{\"logins\":1},{\"logins\":2}]}";
 
         Person personExpected = new Person(name, lastName,age,ifAgree,logins);
-        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject);
+        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject, Person.class);
 
         assertEquals(personExpected.getName(), personCreated.getName());
         assertEquals(personExpected.getLastName(), personCreated.getLastName());
@@ -179,11 +179,11 @@ public class JsonParserTest {
         logins.add("1");
         logins.add("2");
 
-        String jsonToCreateObject = "{\"ClassName\":\"domain.Person\",\"name\":\""+name+"\",\"age\":"+age+"," +
+        String jsonToCreateObject = "{\"name\":\""+name+"\",\"age\":"+age+"," +
                 "\"ifAgree\":true,\"logins\":[{\"logins\":1},{\"logins\":2}]}";
 
         Person personExpected = new Person(name, lastName,age,ifAgree,logins);
-        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject);
+        Person personCreated = (Person) JsonParser.jsonToObject(jsonToCreateObject, Person.class);
 
         assertEquals(personExpected.getName(), personCreated.getName());
         assertEquals(personExpected.getLastName(), personCreated.getLastName());
@@ -194,14 +194,12 @@ public class JsonParserTest {
 
     @Test
     public void prepareJsonTest(){
-        String className = "domain.Car";
         String mark = "BMW";
         String model = "m3";
         int yop = 2009;
-        String json = "{\"ClassName\":"+className+",\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
+        String json = "{\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
 
         List<String> jsonFormatExpected = new ArrayList<String>();
-        jsonFormatExpected.add("ClassName:"+className);
         jsonFormatExpected.add("mark:"+mark);
         jsonFormatExpected.add("model:"+model);
         jsonFormatExpected.add("yop:"+yop);
@@ -211,20 +209,6 @@ public class JsonParserTest {
         assertEquals(jsonFormatExpected,jsonFormatCreated);
     }
 
-    @Test
-    public void getClassNameFromJsonTest(){
-        String className = "domain.Car";
-        String mark = "BMW";
-        String model = "m3";
-        int yop = 2009;
-        String json = "{\"ClassName\":\""+className+"\",\"mark\":\""+mark+"\",\"model\":\""+model+"\",\"yop\":"+yop+"}";
-
-        String classNameExpected = className;
-
-        String classNameReceived = JsonParser.getClassNameFromJson(json);
-
-        assertEquals(classNameExpected, classNameReceived);
-    }
 
 
 

@@ -44,11 +44,11 @@ public class JsonParser {
         return jsonToOutput.toString();
     }
 
-    public static Object jsonToObject(String json) throws IllegalAccessException {
+    public static Object jsonToObject(String json, Class classTemplate) throws IllegalAccessException {
         Class c = null;
         Object newObject = null;
         try {
-            c = Class.forName(getClassNameFromJson(json));
+            c = Class.forName(classTemplate.getName());
             newObject = c.newInstance();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -111,15 +111,6 @@ public class JsonParser {
             }
         }
         return preparedValues;
-    }
-
-    public static String getClassNameFromJson(String json) {
-        Pattern p = Pattern.compile("\"ClassName\":\"(.*?)\",");
-        Matcher m = p.matcher(json);
-        if (m.find()) {
-            return m.group(1);
-        }
-        return null;
     }
 
     private static String getJsonToThisField(String name, String json) {
