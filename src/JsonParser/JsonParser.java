@@ -22,7 +22,7 @@ public class JsonParser {
             try {
                 elementValue = fields[i].get(ob);
             } catch (IllegalAccessException e) {
-                return "Error 1. ";
+                return "Can`t access to field.";
             }
             Type typeOfData = checkTypeOfField(elementValue);
 
@@ -51,8 +51,10 @@ public class JsonParser {
             c = Class.forName(classTemplate.getName());
             newObject = c.newInstance();
         } catch (ClassNotFoundException e) {
+            System.out.println("Class: " + classTemplate.getName() + " not found..." );
             e.printStackTrace();
         } catch (InstantiationException e) {
+            System.out.println("Unfortunately I can`t create new instantion of " + classTemplate.getName());
             e.printStackTrace();
         }
 
