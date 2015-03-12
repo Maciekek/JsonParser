@@ -1,9 +1,8 @@
 # JsonParser
-"Program" napisany na potrzeby przedmiotu JVN Internals 2015 Uniwersytet Gdański.
 Program was written for JVN Internals 2015 University of Gdansk
 ----
 
-##Kilka słów o programie
+
 ##About program
 We had to write program to parsing java object to JSON and rewerse (JSON to java object)
 My JsonParser supports following types of data:
