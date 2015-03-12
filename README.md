@@ -28,8 +28,11 @@ ObjectReturnType objectName =
 
 
 ###Time of parsing to/from JSON
-TODO (GSON and JsonParser to comparison
-I will add it in the evening from my main computer
+|          |to Json (nanosec)     |from Json (nanosec) |to Json (microsec)     |from Json (micosec) |
+|----------|----------------------|--------------------|-----------------------|--------------------|
+|JsonParser|853958                |3632394             |844                    |1266                |
+|Gson      |24146401              |6565348             |22504                  |6220                |
+
 
 
 
