@@ -28,7 +28,8 @@ ObjectReturnType objectName =
 
 
 ###Time of parsing to/from JSON
-TODO
+TODO (GSON and JsonParser to comparison
+I will add it in the evening from my main computer
 
 
 
