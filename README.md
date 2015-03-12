@@ -30,9 +30,10 @@ ObjectReturnType objectName =
 ###Time of parsing to/from JSON
 |          |to Json (nanosec)     |from Json (nanosec) |to Json (microsec)     |from Json (micosec) |
 |----------|----------------------|--------------------|-----------------------|--------------------|
-|JsonParser|853958                |3632394             |844                    |1266                |
-|Gson      |24146401              |6565348             |22504                  |6220                |
+|JsonParser|814742                |1706452             |814                    |1706                |
+|Gson      |22176270              |5989995             |22176                  |5989                |
 
+This time was calculated after 1000 repeat of the same code. This results show 1001 run of loop.
 
 
 
