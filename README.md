@@ -34,5 +34,5 @@ TODO
 
 ##Summation
 
-It was realy interesting task. Cool oportunity to get knowlegde about Reflection API. This kind of programing is`t developed at school. I can see diference between
-my solution of Json parsing and Gson. I know that, comparison my json parser and google`s is like comparison bike and car. But for simply type of data it can working better than big parser. 
+It was realy interesting task. Cool oportunity to get knowlegde about Reflection API. This kind of programing is't developed at school. I can see diference between
+my solution of Json parsing and Gson. I know that, comparison my json parser and google's is like comparison bike and car. But for simply type of data it can working better than big parser. 
