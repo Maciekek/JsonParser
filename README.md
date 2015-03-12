@@ -1,5 +1,5 @@
 # JsonParser
-Program was written for JVN Internals 2015 University of Gdansk
+Program was written for JVM Internals 2015 University of Gdansk
 ----
 
 
